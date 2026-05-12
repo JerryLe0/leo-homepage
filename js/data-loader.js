@@ -3,7 +3,7 @@ window.avatarMap = {};
 
 async function loadAvatarMap() {
     try {
-        const res = await fetch('data/avatar_map.json');
+        const res = await fetch('../data/avatar_map.json');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         window.avatarMap = await res.json();
         console.log(`✅ 头像映射加载完成，共 ${Object.keys(window.avatarMap).length} 个`);
@@ -14,7 +14,7 @@ async function loadAvatarMap() {
 
 async function loadCategoryData() {
     try {
-        const res = await fetch('data/bilibili_categories_aggregated.json');
+        const res = await fetch('../data/bilibili_categories_aggregated.json');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         
@@ -110,7 +110,7 @@ async function loadAnimePreview() {
     const container = document.getElementById('animePreview');
     if (!container) return;
     try {
-        const res = await fetch('data/bangumi_data.json');
+        const res = await fetch('../data/bangumi_data.json');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         const parseDate = (str) => {
@@ -154,7 +154,7 @@ async function loadAnimePreview() {
 
 async function loadDetailedDataForChart() {
     try {
-        const res = await fetch('data/bilibili_following_detailed.json');
+        const res = await fetch('../data/bilibili_following_detailed.json');
         if (!res.ok) throw new Error('无法加载详细数据');
         window.allFollowData = await res.json();
         const yearsSet = new Set();
