@@ -29,7 +29,7 @@ class LiquidGlassName {
 
     async init() {
         try {
-            const resp = await fetch('../data/font-paths-fzyansj.json');
+            const resp = await fetch('data/font-paths-fzyansj.json');
             this.fontData = await resp.json();
             this.loading.style.display = 'none';
             this.label.style.display = 'block';
