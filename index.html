@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jerry Leo — 个人主页</title>
+    <meta name="description" content="Who is Jerry Leo?">
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="loading" id="pageLoading" aria-hidden="true">
+        <svg viewBox="0 0 50 50" aria-hidden="true"><circle r="25" cx="25" cy="25"></circle></svg>
+        <p>加载中</p>
+    </div>
+
+    <nav class="site-nav" aria-label="Primary">
+        <span class="site-nav__brand">Jerry Leo</span>
+        <ul class="site-nav__links">
+            <li><a href="#resume">简历</a></li>
+            <li><a href="#interests">兴趣</a></li>
+            <li><a href="#contact">联系</a></li>
+        </ul>
+    </nav>
+
+    <header class="hero" id="top">
+        <div class="name-display">
+            <div class="loading" id="nameLoading" style="position:static; color: var(--muted); background: transparent;">加载字体数据…</div>
+            <svg class="name-svg" id="zhSvg" width="640" height="260" viewBox="0 -32 750 252" style="display:none; opacity:1;">
+                <defs>
+                    <filter id="lg" x="-60%" y="-60%" width="220%" height="220%">
+                        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="b" />
+                        <feSpecularLighting in="b" surfaceScale="3.5" specularConstant="1.2" specularExponent="25" result="spec">
+                            <fePointLight x="375" y="-80" z="100" />
+                        </feSpecularLighting>
+                        <feComposite in="spec" in2="SourceAlpha" operator="in" result="spec" />
+                        <feMerge>
+                            <feMergeNode in="SourceGraphic" />
+                            <feMergeNode in="spec" />
+                        </feMerge>
+                    </filter>
+                </defs>
+                <g class="zh" id="zhGroup" filter="url(#lg)"></g>
+            </svg>
+            <svg class="name-svg" id="enSvg" width="640" height="260" viewBox="0 40 412 208" style="display:none; opacity:0;">
+                <defs>
+                    <filter id="lg2" x="-60%" y="-60%" width="220%" height="220%">
+                        <feGaussianBlur in="SourceAlpha" stdDeviation="2.5" result="b" />
+                        <feSpecularLighting in="b" surfaceScale="4" specularConstant="1.4" specularExponent="30" result="spec">
+                            <fePointLight x="206" y="-80" z="180" />
+                        </feSpecularLighting>
+                        <feComposite in="spec" in2="SourceAlpha" operator="in" result="spec" />
+                        <feMerge>
+                            <feMergeNode in="SourceGraphic" />
+                            <feMergeNode in="spec" />
+                        </feMerge>
+                    </filter>
+                </defs>
+                <g class="en" data-name="english" filter="url(#lg2)">
+                    <g class="sg"><path class="stroke" d="M 78 40 L 78 155 Q 78 178 58 178 Q 40 178 40 160" /><path class="stroke-tip" d="M 78 40 L 78 155 Q 78 178 58 178 Q 40 178 40 160" /></g>
+                    <g class="sg"><path class="stroke" d="M 98 108 L 148 108" /><path class="stroke-tip" d="M 98 108 L 148 108" /></g>
+                    <g class="sg"><path class="stroke" d="M 98 108 Q 98 80 123 80 Q 150 80 150 108 Q 150 138 123 138 Q 98 138 98 118" /><path class="stroke-tip" d="M 98 108 Q 98 80 123 80 Q 150 80 150 108 Q 150 138 123 138 Q 98 138 98 118" /></g>
+                    <g class="sg"><path class="stroke" d="M 168 82 L 168 138" /><path class="stroke-tip" d="M 168 82 L 168 138" /></g>
+                    <g class="sg"><path class="stroke" d="M 168 98 Q 185 80 202 88" /><path class="stroke-tip" d="M 168 98 Q 185 80 202 88" /></g>
+                    <g class="sg"><path class="stroke" d="M 218 82 L 218 138" /><path class="stroke-tip" d="M 218 82 L 218 138" /></g>
+                    <g class="sg"><path class="stroke" d="M 218 98 Q 235 80 252 88" /><path class="stroke-tip" d="M 218 98 Q 235 80 252 88" /></g>
+                    <g class="sg"><path class="stroke" d="M 268 82 L 293 130" /><path class="stroke-tip" d="M 268 82 L 293 130" /></g>
+                    <g class="sg"><path class="stroke" d="M 318 82 L 293 130 L 272 175" /><path class="stroke-tip" d="M 318 82 L 293 130 L 272 175" /></g>
+                    <g class="sg"><path class="stroke" d="M 98 192 L 98 248" /><path class="stroke-tip" d="M 98 192 L 98 248" /></g>
+                    <g class="sg"><path class="stroke" d="M 98 248 L 158 248" /><path class="stroke-tip" d="M 98 248 L 158 248" /></g>
+                    <g class="sg"><path class="stroke" d="M 175 218 L 225 218" /><path class="stroke-tip" d="M 175 218 L 225 218" /></g>
+                    <g class="sg"><path class="stroke" d="M 175 218 Q 175 192 200 192 Q 227 192 227 218 Q 227 248 200 248 Q 175 248 175 228" /><path class="stroke-tip" d="M 175 218 Q 175 192 200 192 Q 227 192 227 218 Q 227 248 200 248 Q 175 248 175 228" /></g>
+                    <g class="sg"><path class="stroke" d="M 278 220 Q 278 192 305 192 Q 332 192 332 220 Q 332 248 305 248 Q 278 248 278 220" /><path class="stroke-tip" d="M 278 220 Q 278 192 305 192 Q 332 192 332 220 Q 332 248 305 248 Q 278 248 278 220" /></g>
+                </g>
+            </svg>
+            <div class="lang-label" id="langLabel" style="display:none">中文</div>
+        </div>
+        <p class="hero__tagline">数据科学与推荐系统方向（机器学习 / 图学习 / 可视分析）</p>
+        <div class="hero__cta">
+            <a class="btn btn--fill" href="#resume">查看简历</a>
+            <a class="btn" href="#interests">兴趣</a>
+        </div>
+    </header>
+
+    <!-- 简历区块 -->
+    <section class="resume-block" id="resume" aria-labelledby="resume-heading">
+        <div class="resume-block__content">
+            <p class="section-label">个人简介</p>
+            <h2 class="section-title" id="resume-heading">教育背景与经历</h2>
+            <p class="intro">
+                硕士毕业于新加坡南洋理工大学数据科学专业（08/2024-01/2026，GPA 4.15/5.0），本科毕业于中山大学智能工程学院交通工程专业（09/2020-06/2024，GPA 3.6/5.0）。
+                研究与工程兴趣集中在数据挖掘、深度学习与推荐系统，尤其关注图学习、扩散模型与可解释性分析。
+                曾在中国移动（东莞）担任人工智能工程师，完成水印文字提取、工单查重与聚类、以及 YOLOv8 安全装备检测并部署上线。
+            </p>
+
+            <div class="timeline">
+                <h3>教育背景</h3>
+                <div class="edu-grid">
+                    <!-- 硕士卡片示例 -->
+                    <div class="edu-card edu-card--master">
+                        <!-- 新增：内容包裹层，提升层级 -->
+                        <div style="position: relative; z-index: 1;">
+                            <h4>数据科学 — 南洋理工大学</h4>
+                            <span>08/2024 - 01/2026 · GPA 4.15/5.0</span>
+                        </div>
+                    </div>
+                    <!-- 学士卡片示例 -->
+                    <div class="edu-card edu-card--bachelor">
+                        <!-- 新增：内容包裹层，提升层级 -->
+                        <div style="position: relative; z-index: 1;">
+                            <h4>交通工程 — 中山大学</h4>
+                            <span>09/2020 - 06/2024 · GPA 3.6/5.0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <h3>经历（实习与项目 / 竞赛）</h3>
+                <article class="timeline-item">
+                    <div class="timeline-item__role">人工智能工程师（客户响应中心）— 中国移动通信集团公司（东莞）</div>
+                    <div class="timeline-item__meta">08/2023 - 09/2023</div>
+                    <p class="timeline-item__desc">
+                        使用 PaddleOCR 完成“水印相机”拍照打卡的图片水印文字信息提取，识别打卡时间、水印格式与坐标等关键特征，并基于 Flask 部署接口测试。
+                        <br>使用 jieba 分词 + TF-IDF/词频向量与余弦相似度，结合 DBSCAN 聚类实现工单文本查重与相似工单归并，降低重复上报。
+                        <br>整合业务图片数据集，LabelImg 标定后训练 YOLOv8 进行安全装备（如安全系带/安全头盔）目标检测，并通过 Flask 接口进行推理验证与部署。
+                    </p>
+                </article>
+                <article class="timeline-item">
+                    <div class="timeline-item__role">项目组长 — 第十八届全国大学生交通运输科技大赛</div>
+                    <div class="timeline-item__meta">03/2023 - 05/2023</div>
+                    <p class="timeline-item__desc">
+                        基于多智能体强化学习完成路网交通信号控制与可解释性探究，确定交叉口通行效率评估指标（吞吐量、信号灯、延误时间、交通流量）及时空相关性度量。
+                        <br>使用 Vue.js + D3 搭建可交互可视化平台，设计 6 个动态视图覆盖模型选择、对比、拥堵总览、测试评价、队列通行与关联分析。
+                        <br>通过 Notion 的共享工作区推进进度与分工，阶段性总结与复盘推动交付闭环。
+                        <br>该项目获得国家级二等奖（第十八届全国大学生交通运输科技大赛，05/2023）。
+                    </p>
+                </article>
+                <article class="timeline-item">
+                    <div class="timeline-item__role">项目组员 — 面向电商的高效推荐算法研究</div>
+                    <div class="timeline-item__meta">01/2025 - 11/2025</div>
+                    <p class="timeline-item__desc">
+                        独立复现并深入剖析 RecDiff（扩散社交去噪）、MHCN（多通道超图卷积）与 KCGN（知识感知耦合图神经网络）等 SOTA 社交推荐模型；
+                        在课程学习强化 RecDiff 上实现对社交图谱难度与扩散噪声强度的阶段性动态调度，使 Ciao 数据集 Recall@10 提升 51%，NDCG@10 提升 36%。
+                        <br>为 Yelp / Ciao / Epinions 设计稳健的端到端数据处理流水线，包含实体解析与标签降维映射，并统一时序划分标准，保证实验基准严谨性。
+                        <br>构建统一测试模块修复多目标 NDCG 偏差并严格执行全目标排序评估协议，消除数据泄露风险。
+                    </p>
+                </article>
+                <article class="timeline-item">
+                    <div class="timeline-item__role">项目组员 — 基于 Spark 的个性化美食推荐</div>
+                    <div class="timeline-item__meta">04/2022 - 06/2022</div>
+                    <p class="timeline-item__desc">
+                        开发标签系统（评分、菜系、价格等），通过爬虫与开放数据源获取店铺信息，并补全缺失菜系以构建可用于协同过滤的训练数据集。
+                        <br>采用用户协同过滤生成个性化推荐，并使用 Streamlit 搭建交互式界面，支持用户偏好配置与推荐结果展示。
+                    </p>
+                </article>
+            </div>
+
+            <div class="timeline">
+                <h3>技能</h3>
+                <div class="skill-sections">
+                    <div class="skill-block">
+                        <div class="skill-block__title">研究方向</div>
+                        <div class="skills">
+                            <span class="skill-tag skill-tag--direction">推荐系统</span>
+                            <span class="skill-tag skill-tag--direction">多智能体强化学习</span>
+                            <span class="skill-tag skill-tag--direction">可解释性</span>
+                        </div>
+                    </div>
+                    <div class="skill-block">
+                        <div class="skill-block__title">计算机技能</div>
+                        <div class="skills">
+                            <span class="skill-tag skill-tag--computer">Python</span>
+                            <span class="skill-tag skill-tag--computer">JavaScript</span>
+                            <span class="skill-tag skill-tag--computer">Vue</span>
+                            <span class="skill-tag skill-tag--computer">SQL</span>
+                            <span class="skill-tag skill-tag--computer">C/C++</span>
+                            <span class="skill-tag skill-tag--computer">R</span>
+                            <span class="skill-tag skill-tag--computer">AutoCAD</span>
+                            <span class="skill-tag skill-tag--computer">MATLAB</span>
+                        </div>
+                    </div>
+                    <div class="skill-block">
+                        <div class="skill-block__title">语言技能</div>
+                        <div class="skills">
+                            <span class="skill-tag skill-tag--language">汉语普通话(母语)</span>
+                            <span class="skill-tag skill-tag--language">粤语(熟练)</span>
+                            <span class="skill-tag skill-tag--language">英语(流利, 雅思: 7.0; 四级613; 六级545)</span>
+                            <span class="skill-tag skill-tag--language">日语(入门)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="h-spacer">核心理念</div>
+    <section class="h-wrap" id="highlights" aria-label="Highlights">
+        <div class="h-pin">
+            <div class="h-track" id="hTrack">
+                <div class="h-card">坚持用数据说话<small>把想法落到可验证的实验与指标上</small></div>
+                <div class="h-card">让模型可解释、可落地<small>不仅追求效果，也关注可理解与可部署</small></div>
+                <div class="h-card">协作效率与交付质量<small>清晰沟通、快速迭代、按阶段复盘</small></div>
+                <div class="h-card">持续探索与学习<small>保持对新方法的敏感度与工程细节的严谨</small></div>
+            </div>
+        </div>
+    </section>
+
+    <div class="h-spacer">兴趣</div>
+    <section class="interests" id="interests" aria-labelledby="interests-heading">
+        <p class="section-label">Beyond Work</p>
+        <div class="analytics-card">
+            <div class="analytics-header">
+                <div class="analytics-title"><span></span> 关注动态 · 数据</div>
+                <div class="filters">
+                    <select id="yearSelect"></select>
+                    <select id="quarterSelect">
+                        <option value="1">第一季度 (1-3月)</option>
+                        <option value="2">第二季度 (4-6月)</option>
+                        <option value="3">第三季度 (7-9月)</option>
+                        <option value="4">第四季度 (10-12月)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="chart-container">
+                <div class="orbit-container" aria-hidden="true">
+                    <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
+                        <circle class="orbit-ring" cx="100" cy="100" r="102" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+                        <circle class="orbit-ring" cx="100" cy="100" r="65" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+                    </svg>
+                </div>
+                <canvas id="interestChart" width="400" height="300"></canvas>
+                <div class="orbit-glow-dot" style="position: absolute; width: 10px; height: 10px; border-radius: 50%; background-color: '#b77f70'; pointer-events: none; transform: translate(-50%, -50%); will-change: left, top; z-index: 4;"></div>
+                <div id="customLegend" class="custom-legend"></div>
+            </div>
+            <button id="drillBackBtn" class="drill-back-btn" style="display: none; margin-top: 12px;">↺ 返回一级分类</button>
+            <div id="insightMessage" class="insight-text">选择年份与季度，查看当时我的关注重心分布。</div>
+        </div>
+        <h2 class="section-title" id="interests-heading">我的关注</h2>
+        <div class="interest-grid">
+            <article class="interest-card" data-category="知识">
+                <h3>📚 知识</h3>
+                <div class="preview-list" data-preview="知识">加载中…</div>
+                <a href="#" class="view-all-link" data-link="知识">查看更多 →</a>
+            </article>
+            <article class="interest-card" data-category="音乐">
+                <h3>🎵 音乐</h3>
+                <div class="preview-list" data-preview="音乐">加载中…</div>
+                <a href="#" class="view-all-link" data-link="音乐">查看更多 →</a>
+            </article>
+            <article class="interest-card" data-category="电影与电视">
+                <h3>🍿 影视</h3>
+                <div id="animePreview" class="preview-list" data-preview="电影与电视">加载中…</div>
+                <a href="bangumi.html" class="view-all-link">查看影视列表 →</a>
+            </article>
+            <article class="interest-card" data-category="科技">
+                <h3>💻 科技数码</h3>
+                <div class="preview-list" data-preview="科技">加载中…</div>
+                <a href="#" class="view-all-link" data-link="科技">查看更多 →</a>
+            </article>
+            <article class="interest-card" data-category="体育">
+                <h3>⚽ 体育</h3>
+                <div class="preview-list" data-preview="体育">加载中…</div>
+                <a href="#" class="view-all-link" data-link="体育">查看更多 →</a>
+            </article>
+            <article class="interest-card" data-category="游戏">
+                <h3>🎮 游戏</h3>
+                <div class="preview-list" data-preview="游戏">加载中…</div>
+                <a href="#" class="view-all-link" data-link="游戏">查看更多 →</a>
+            </article>
+            <article class="interest-card interest-card--wide" data-category="生活">
+                <h3>🌿 生活 · 旅行 · 美食</h3>
+                <div class="preview-list" data-preview="生活">加载中…</div>
+                <a href="#" class="view-all-link" data-link="生活">查看更多 →</a>
+            </article>
+            <article class="interest-card" data-category="动画">
+                <h3>🎬 动画</h3>
+                <div class="preview-list" data-preview="动画">加载中…</div>
+                <a href="#" class="view-all-link" data-link="动画">查看更多 →</a>
+            </article>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <h2>联系</h2>
+        <p class="contact-line">电话：<a href="tel:+8618922222888">+86 1892222888</a></p>
+        <p class="contact-line">邮箱：<a href="mailto:9318288@qq.com">9318288@qq.com</a></p>
+        <p class="contact-line">地点：广东省东莞市</p>
+        <p class="contact-line">链接：<a href="#">LinkedIn</a> · <a href="https://github.com/JerryLe0" target="_blank">GitHub</a> · <a href="#">其他</a></p>
+        <p class="footer-note">Ref：<a href="https://github.com/JIEJOE-WEB-Tutorial" target="_blank">JIEJOE-WEB-Tutorial</a></p>
+    </footer>
+
+    <!-- 引入拆分的 JS 文件 -->
+    <script src="js/animations.js"></script>
+    <script src="js/chart.js"></script>
+    <script src="js/data-loader.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

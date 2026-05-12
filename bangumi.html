@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>我的追番列表 · 哔哩哔哩个人追番仓</title>
+    <!-- Font Awesome 6 (free) 提供哔哩哔哩官方品牌图标) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #f5f5f7;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            padding: 20px;
+        }
+        /* 标题行布局：保持居中，同时让图标和文字优雅排布 */
+        .topbar h1 {
+            text-align: center;
+            margin-bottom: 18px;
+            color: #fb7299;
+            font-size: 1.9rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        /* B站图标链接样式：无下划线，继承标题粉色，交互舒服 */
+        .bili-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: #fb7299;
+            transition: transform 0.2s ease, opacity 0.2s ease;
+            line-height: 1;
+        }
+        .bili-link:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+        .bili-link i {
+            font-size: 1.8rem;
+            vertical-align: middle;
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.05));
+        }
+        /* 保证文字和图标完美对齐 */
+        .topbar h1 span {
+            vertical-align: middle;
+            margin-left: 2px;
+        }
+
+        .topbar {
+            max-width: 1400px;
+            margin: 0 auto 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .toolbar input[type="search"] {
+            width: min(520px, 100%);
+            padding: 10px 14px;
+            border-radius: 14px;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            background: white;
+            outline: none;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+        }
+        .toolbar input[type="search"]:focus {
+            border-color: #fb7299;
+            box-shadow: 0 0 0 2px rgba(251,114,153,0.2);
+        }
+
+        .style-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .style-chip {
+            appearance: none;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            background: white;
+            color: #5e5e6e;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, transform 0.15s;
+        }
+
+        .style-chip:hover {
+            transform: translateY(-1px);
+        }
+
+        .style-chip.is-active {
+            border-color: rgba(251, 114, 153, 0.55);
+            background: rgba(251, 114, 153, 0.10);
+            color: #fb7299;
+        }
+
+        .btn {
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            background: white;
+            color: #5e5e6e;
+            padding: 8px 12px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background 0.15s, transform 0.15s;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        .grid-status {
+            text-align: center;
+            color: #8e8e9e;
+            padding: 24px 0;
+        }
+
+        .pagination {
+            max-width: 1400px;
+            margin: 18px auto 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            color: #8e8e9e;
+        }
+
+        .page-info {
+            font-size: 0.85rem;
+            color: #8e8e9e;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.12);
+        }
+        .card img {
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            object-fit: cover;
+            display: block;
+            background: #e9ecef;
+        }
+        .info {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+        }
+        .title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #1e1e2a;
+            display: -webkit-box;
+            line-clamp: 2;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .desc {
+            font-size: 0.85rem;
+            color: #5e5e6e;
+            margin: 8px 0;
+            line-height: 1.4;
+            display: -webkit-box;
+            line-clamp: 3;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .meta {
+            font-size: 0.75rem;
+            color: #8e8e9e;
+            margin-top: 8px;
+            border-top: 1px solid #eee;
+            padding-top: 8px;
+            margin-top: auto;
+        }
+        .episode {
+            font-weight: 500;
+            color: #fb7299;
+        }
+        .tag {
+            display: inline-block;
+            background: #f0f0f0;
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            margin-top: 4px;
+            margin-right: 6px;
+        }
+        /* 小屏优化 */
+        @media (max-width: 600px) {
+            .grid {
+                gap: 16px;
+            }
+            .info {
+                padding: 12px;
+            }
+            .topbar h1 {
+                font-size: 1.55rem;
+            }
+            .bili-link i {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* 清除按钮保持一致性 */
+        #clearBtn:active {
+            transform: scale(0.97);
+        }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <!-- 🎯 哔哩哔哩个人主页链接 -->
+        <h1>
+            <a class="bili-link" href="https://space.bilibili.com/35143572/bangumi" 
+               target="_blank" rel="noopener noreferrer" 
+               title="点击访问我的哔哩哔哩个人空间">
+                <i class="fab fa-bilibili"></i>
+            </a>
+            <span>我的追番列表</span>
+        </h1>
+        <!-- 温馨提示：上方B站链接占位符 YOUR_BILIBILI_UID 可替换成你自己的uid，例如 "12345678" -->
+        <div class="toolbar" role="region" aria-label="筛选与搜索">
+            <input id="searchInput" type="search" placeholder="搜索番剧标题或简介..." aria-label="搜索你喜欢的内容" />
+            <div id="styleFilters" class="style-filters" aria-label="按风格筛选"></div>
+            <button id="clearBtn" class="btn" type="button">清除筛选</button>
+        </div>
+    </div>
+    <div id="app" class="grid">
+        <div class="grid-status" style="grid-column: 1/-1;">加载中...</div>
+    </div>
+    <div id="pagination" class="pagination" aria-label="分页导航" style="display:none;"></div>
+
+    <script>
+        (() => {
+            const container = document.getElementById('app');
+            const paginationEl = document.getElementById('pagination');
+            const searchInput = document.getElementById('searchInput');
+            const styleFiltersEl = document.getElementById('styleFilters');
+            const clearBtn = document.getElementById('clearBtn');
+
+            const state = {
+                query: '',
+                selectedStyles: new Set(),
+                page: 1,
+                filteredAll: [],
+                showAllStyleChips: false
+            };
+
+            const PAGE_SIZE = 10;
+
+            const PLACEHOLDER = (() => {
+                const svg = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="200" height="300" viewBox="0 0 200 300">
+                        <rect width="200" height="300" rx="16" fill="#e9ecef"/>
+                        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+                              font-family="system-ui, -apple-system, Segoe UI, Roboto, Arial" font-size="16" fill="#8e8e9e">
+                            No Image
+                        </text>
+                    </svg>
+                `.trim();
+                return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+            })();
+
+            // Pre-computed local cover mapping (by bangumi_data.json title)
+            const LOCAL_COVERS_BY_TITLE = {"大王不高兴":"./cover_images/001_大王不高兴.jpg","元龙":"./cover_images/002_元龙.jpg","牧神记":"./cover_images/003_牧神记.jpg","名侦探柯南":"./cover_images/004_名侦探柯南.jpg","命运-奇异赝品 黎明低语":"./cover_images/001_命运-冠位指定-神圣圆桌领域卡美洛-后篇圣骑士银之臂.jpg","葬送的芙莉莲":"./cover_images/007_葬送的芙莉莲.jpg","绝妙舞步":"./cover_images/008_绝妙舞步.jpg","凡人修仙传":"./cover_images/009_凡人修仙传.jpg","中国奇谭2":"./cover_images/010_中国奇谭2.jpg","爱上她的理由":"./cover_images/012_爱上她的理由.jpg","凸变英雄X":"./cover_images/013_凸变英雄X.jpg","中国奇谭":"./cover_images/010_中国奇谭2.jpg","风灵玉秀":"./cover_images/016_风灵玉秀.jpg","疯狂动物城大小事":"./cover_images/021_疯狂动物城大小事.jpg","薰香花朵凛然绽放":"./cover_images/022_薰香花朵凛然绽放.jpg","小城日常":"./cover_images/024_小城日常.jpg","2026年中央广播电视总台春节联欢晚会":"./cover_images/002_2026年中央广播电视总台春节联欢晚会.jpg","2025年中央广播电视总台春节联欢晚会":"./cover_images/003_2025年中央广播电视总台春节联欢晚会.jpg","2025bilibili跨年晚会":"./cover_images/006_2025bilibili跨年晚会.jpg","柯南幕后：青山刚昌的30年":"./cover_images/008_柯南幕后青山刚昌的30年.jpg","古董超有趣":"./cover_images/010_古董超有趣.jpg","明日方舟音律联觉专场演出-不觅浪尘 2024":"./cover_images/011_明日方舟音律联觉专场演出-不觅浪尘2024.jpg","数学漫步之旅":"./cover_images/004_数学漫步之旅第二季中配版.jpg","海兽之子":"./cover_images/013_海兽之子.jpg","2023最美的夜 bilibili晚会":"./cover_images/015_2023最美的夜bilibili晚会.jpg","毒舌律师":"./cover_images/017_毒舌律师.jpg","2022最美的夜 bilibili晚会":"./cover_images/018_2022最美的夜bilibili晚会.jpg","此志无双":"./cover_images/019_此志无双.jpg","明日方舟音律联觉专场演出-灯下定影 2022":"./cover_images/020_明日方舟音律联觉专场演出-灯下定影2022.jpg","BEATBOX街演旅行纪录片":"./cover_images/021_BEATBOX街演旅行纪录片.jpg","青之箱":"./cover_images/009_青之箱.jpg","剧场版 咒术回战 0":"./cover_images/001_FatestaynightUnlimitedBladeWorks第一季.jpg","颂乐人偶":"./cover_images/013_颂乐人偶.jpg","伍六七之记忆碎片":"./cover_images/019_伍六七之记忆碎片.jpg","擅长捉弄的高木同学":"./cover_images/005_擅长捉弄的高木同学.jpg","鲁邦三世VS名侦探柯南THE MOVIE":"./cover_images/001_FatestaynightUnlimitedBladeWorks第一季.jpg","怪盗基德1412":"./cover_images/013_怪盗基德1412.jpg","雾山五行":"./cover_images/015_雾山五行.jpg","君主·埃尔梅罗二世事件簿 魔眼收集列车 Grace note":"./cover_images/001_FatestaynightUnlimitedBladeWorks第一季.jpg","命运-冠位指定 -神圣圆桌领域卡美洛- 后篇 圣骑士银之臂":"./cover_images/001_命运-冠位指定-神圣圆桌领域卡美洛-后篇圣骑士银之臂.jpg","命运-冠位指定 -神圣圆桌领域卡美洛- 前篇 漂泊的银之臂":"./cover_images/001_命运-冠位指定-神圣圆桌领域卡美洛-后篇圣骑士银之臂.jpg","三体":"./cover_images/005_三体.jpg","伍六七之暗影宿命":"./cover_images/006_伍六七之暗影宿命.jpg","虚构推理":"./cover_images/008_虚构推理.jpg","间谍过家家":"./cover_images/007_间谍过家家粤配版.jpg","领风者":"./cover_images/011_领风者.jpg","国王排名":"./cover_images/013_国王排名.jpg","谎颜":"./cover_images/017_谎颜.jpg","中华小子":"./cover_images/019_中华小子.jpg","我的三体之罗辑传":"./cover_images/021_我的三体之罗辑传.jpg","命运-冠位指定 冠位时间神殿所罗门":"./cover_images/001_命运-冠位指定-神圣圆桌领域卡美洛-后篇圣骑士银之臂.jpg","中国古诗词动漫":"./cover_images/002_中国古诗词动漫.jpg","偷星九月天":"./cover_images/003_偷星九月天.jpg","伍六七":"./cover_images/004_伍六七.jpg","命运-冠位指定 -月光／失落之室-":"./cover_images/001_命运-冠位指定-神圣圆桌领域卡美洛-后篇圣骑士银之臂.jpg","罗小黑战记":"./cover_images/009_罗小黑战记.jpg","虹猫蓝兔七侠传":"./cover_images/010_虹猫蓝兔七侠传.jpg","伍六七之玄武国篇":"./cover_images/011_伍六七之玄武国篇.jpg","堀与宫村":"./cover_images/010_堀与宫村中配版.jpg","咒术回战":"./cover_images/007_咒术回战第二季.jpg","李林克的小馆儿":"./cover_images/004_李林克的小馆儿第二季.jpg","时光代理人":"./cover_images/001_时光代理人第二季.jpg","魔女之旅":"./cover_images/017_魔女之旅.jpg","约战狂三外传":"./cover_images/021_约战狂三外传.jpg","月色真美":"./cover_images/023_月色真美.jpg","冰菓":"./cover_images/024_冰菓.jpg","某科学的超电磁炮T":"./cover_images/002_某科学的超电磁炮T.jpg","路人女主的养成方法 Fine":"./cover_images/001_FatestaynightUnlimitedBladeWorks第一季.jpg","某科学的一方通行":"./cover_images/006_某科学的一方通行.jpg","青春猪头少年不会梦到怀梦美少女":"./cover_images/007_青春猪头少年不会梦到怀梦美少女.jpg","青春猪头少年不会梦到兔女郎学姐":"./cover_images/008_青春猪头少年不会梦到兔女郎学姐.jpg","工作细胞":"./cover_images/009_工作细胞.jpg","碧蓝之海":"./cover_images/002_碧蓝之海第二季.jpg","某科学的超电磁炮S":"./cover_images/012_某科学的超电磁炮S.jpg","百变小樱":"./cover_images/013_百变小樱.jpg","魔卡少女樱 Clear Card篇 序幕 小樱与两人的小熊":"./cover_images/001_FatestaynightUnlimitedBladeWorks第一季.jpg","卫宫家今天的饭":"./cover_images/015_卫宫家今天的饭.jpg","魔卡少女樱 CLEAR CARD篇":"./cover_images/001_FatestaynightUnlimitedBladeWorks第一季.jpg","欢迎来到实力至上主义的教室":"./cover_images/017_欢迎来到实力至上主义的教室.jpg","埃罗芒阿老师":"./cover_images/018_埃罗芒阿老师.jpg","路人女主的养成方法":"./cover_images/005_路人女主的养成方法Fine.jpg","魁拔妖侠传":"./cover_images/020_魁拔妖侠传.jpg","玉子爱情故事":"./cover_images/021_玉子爱情故事.jpg","百妖谱":"./cover_images/004_百妖谱司府篇.jpg","大理寺日志":"./cover_images/004_大理寺日志.jpg","格莱普尼尔":"./cover_images/008_格莱普尼尔.jpg","四月是你的谎言":"./cover_images/009_四月是你的谎言.jpg","萤火之森":"./cover_images/011_萤火之森.jpg","她和她的猫":"./cover_images/012_她和她的猫.jpg","言叶之庭":"./cover_images/013_言叶之庭.jpg","终将成为你":"./cover_images/014_终将成为你.jpg","一人之下":"./cover_images/015_一人之下第二季.jpg","CAROLE & TUESDAY":"./cover_images/001_FatestaynightUnlimitedBladeWorks第一季.jpg","命运-冠位指定 绝对魔兽战线 巴比伦尼亚":"./cover_images/001_命运-冠位指定-神圣圆桌领域卡美洛-后篇圣骑士银之臂.jpg","约会大作战":"./cover_images/003_约会大作战第三季.jpg","Fate/Zero 第二季":"./cover_images/022_FateZero第二季.jpg","Fate/EXTRA Last Encore":"./cover_images/023_FateEXTRALastEncore.jpg","Fate/Zero 第一季":"./cover_images/022_FateZero第二季.jpg","圣诞之吻SS+ plus":"./cover_images/001_FatestaynightUnlimitedBladeWorks第一季.jpg","圣诞之吻SS":"./cover_images/002_圣诞之吻SSplus.jpg","落第骑士英雄谭":"./cover_images/005_落第骑士英雄谭.jpg","伍六七之最强发型师":"./cover_images/007_伍六七之最强发型师.jpg","鬼灭之刃":"./cover_images/007_鬼灭之刃无限城篇第一章猗窝座再袭.jpg","盾之勇者成名录":"./cover_images/001_盾之勇者成名录第四季.jpg","紫罗兰永恒花园":"./cover_images/001_紫罗兰永恒花园剧场版.jpg"};
+
+            function normalizeTitleKey(str) {
+                return String(str || '')
+                    .replace(/\s+/g, '')
+                    .toLowerCase()
+                    .replace(/[^\w\u4e00-\u9fff]/g, '');
+            }
+
+            const LOCAL_COVERS_BY_NORM_TITLE = (() => {
+                const map = Object.create(null);
+                for (const k of Object.keys(LOCAL_COVERS_BY_TITLE)) {
+                    map[normalizeTitleKey(k)] = LOCAL_COVERS_BY_TITLE[k];
+                }
+                return map;
+            })();
+
+            const LOCAL_COVER_DIR = new URL('cover_images/', document.baseURI).href;
+            const EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp'];
+
+            function normalizeStyles(styles) {
+                if (!styles) return [];
+                if (Array.isArray(styles)) return styles.filter(Boolean).map(String);
+                if (typeof styles === 'string') {
+                    return styles.split(',').map(s => s.trim()).filter(Boolean);
+                }
+                return [];
+            }
+
+            function toSlug(str) {
+                const s = String(str || '').trim();
+                if (!s) return '';
+                const cleaned = s
+                    .toLowerCase()
+                    .replace(/\s+/g, '-')
+                    .replace(/[^\w\u4e00-\u9fff-]/g, '')
+                    .replace(/-+/g, '-');
+                return cleaned.slice(0, 64);
+            }
+
+            function setImageCover(img, item) {
+                const remote = item.cover || '';
+                const local = item.title ? LOCAL_COVERS_BY_NORM_TITLE[normalizeTitleKey(item.title)] : '';
+
+                const candidates = [];
+                if (local) candidates.push(local);
+                if (remote) candidates.push(remote);
+                candidates.push(PLACEHOLDER);
+
+                let i = 0;
+                img.src = candidates[i] || PLACEHOLDER;
+                img.addEventListener('error', function onError() {
+                    i += 1;
+                    img.removeEventListener('error', onError);
+                    if (i < candidates.length) {
+                        img.src = candidates[i];
+                        img.addEventListener('error', onError, { once: false });
+                    }
+                });
+            }
+
+            function buildTagSpans(styles) {
+                const wrapper = document.createElement('div');
+                wrapper.style.display = 'block';
+                const prefix = document.createElement('span');
+                prefix.textContent = '🏷️ ';
+                prefix.style.marginRight = '2px';
+                wrapper.appendChild(prefix);
+
+                styles.forEach((style) => {
+                    const span = document.createElement('span');
+                    span.className = 'tag';
+                    span.textContent = style;
+                    wrapper.appendChild(span);
+                });
+                return wrapper;
+            }
+
+            function buildCard(item) {
+                const card = document.createElement('div');
+                card.className = 'card';
+
+                const img = document.createElement('img');
+                img.loading = 'lazy';
+                img.referrerPolicy = 'no-referrer';
+                img.alt = item.title ? item.title : '封面';
+                img.title = item.title ? item.title : '';
+                setImageCover(img, item);
+                card.appendChild(img);
+
+                const info = document.createElement('div');
+                info.className = 'info';
+
+                const title = document.createElement('div');
+                title.className = 'title';
+                title.textContent = item.title || '';
+                info.appendChild(title);
+
+                if (item.evaluate) {
+                    const desc = document.createElement('div');
+                    desc.className = 'desc';
+                    desc.textContent = item.evaluate;
+                    info.appendChild(desc);
+                }
+
+                const meta = document.createElement('div');
+                meta.className = 'meta';
+                let hasMeta = false;
+
+                if (item.latest_episode) {
+                    const ep = document.createElement('div');
+                    ep.className = 'episode';
+                    ep.textContent = `📺 ${item.latest_episode}`;
+                    meta.appendChild(ep);
+                    hasMeta = true;
+                }
+
+                if (item.release_date) {
+                    const rd = document.createElement('div');
+                    rd.textContent = `📅 开播：${item.release_date}`;
+                    meta.appendChild(rd);
+                    hasMeta = true;
+                }
+
+                if (item.styles && item.styles.length > 0) {
+                    meta.appendChild(buildTagSpans(item.styles));
+                    hasMeta = true;
+                }
+
+                if (hasMeta) info.appendChild(meta);
+
+                card.appendChild(info);
+                return card;
+            }
+
+            function parseReleaseDate(str) {
+                const s = String(str || '').trim();
+                const m = s.match(/(\d{4})年\s*(\d{1,2})月\s*(\d{1,2})日/);
+                if (!m) return null;
+                const y = Number(m[1]);
+                const mo = Number(m[2]);
+                const d = Number(m[3]);
+                if (!y || !mo || !d) return null;
+                return Date.UTC(y, mo - 1, d);
+            }
+
+            function sortByReleaseDate(items) {
+                const DESC = true;
+                return items.slice().sort((a, b) => {
+                    const ta = parseReleaseDate(a.release_date);
+                    const tb = parseReleaseDate(b.release_date);
+
+                    if (ta === null && tb === null) {
+                        return (a.title || '').localeCompare(b.title || '', 'zh-Hans-CN');
+                    }
+                    if (ta === null) return 1;
+                    if (tb === null) return -1;
+                    return DESC ? (tb - ta) : (ta - tb);
+                });
+            }
+
+            function renderPagination(totalItems, totalPages) {
+                if (totalItems <= PAGE_SIZE || totalPages <= 1) {
+                    paginationEl.style.display = 'none';
+                    return;
+                }
+
+                paginationEl.style.display = 'flex';
+                paginationEl.innerHTML = '';
+
+                const prevBtn = document.createElement('button');
+                prevBtn.type = 'button';
+                prevBtn.className = 'btn';
+                prevBtn.textContent = '上一页';
+                prevBtn.disabled = state.page <= 1;
+                prevBtn.addEventListener('click', () => {
+                    state.page = Math.max(1, state.page - 1);
+                    renderFromState();
+                });
+
+                const info = document.createElement('span');
+                info.className = 'page-info';
+                info.textContent = `第 ${state.page} / ${totalPages} 页 · 共 ${totalItems} 个`;
+
+                const nextBtn = document.createElement('button');
+                nextBtn.type = 'button';
+                nextBtn.className = 'btn';
+                nextBtn.textContent = '下一页';
+                nextBtn.disabled = state.page >= totalPages;
+                nextBtn.addEventListener('click', () => {
+                    state.page = Math.min(totalPages, state.page + 1);
+                    renderFromState();
+                });
+
+                paginationEl.appendChild(prevBtn);
+                paginationEl.appendChild(info);
+                paginationEl.appendChild(nextBtn);
+            }
+
+            function renderFromState() {
+                const allItems = Array.isArray(state.filteredAll) ? state.filteredAll : [];
+                const sorted = sortByReleaseDate(allItems);
+
+                if (!sorted.length) {
+                    state.page = 1;
+                    paginationEl.style.display = 'none';
+                    container.innerHTML = '';
+                    const empty = document.createElement('div');
+                    empty.className = 'grid-status';
+                    empty.style.gridColumn = '1/-1';
+                    empty.textContent = '✨ 没有匹配的番剧，试试清除筛选或换个关键词吧';
+                    container.appendChild(empty);
+                    return;
+                }
+
+                const totalPages = Math.ceil(sorted.length / PAGE_SIZE) || 1;
+                if (state.page < 1) state.page = 1;
+                if (state.page > totalPages) state.page = totalPages;
+
+                const start = (state.page - 1) * PAGE_SIZE;
+                const pageItems = sorted.slice(start, start + PAGE_SIZE);
+
+                container.innerHTML = '';
+                const frag = document.createDocumentFragment();
+                pageItems.forEach((item) => frag.appendChild(buildCard(item)));
+                container.appendChild(frag);
+
+                renderPagination(sorted.length, totalPages);
+            }
+
+            function applyFilters(allItems) {
+                const q = state.query.trim().toLowerCase();
+                const selected = state.selectedStyles;
+
+                return allItems.filter((item) => {
+                    if (q) {
+                        const title = (item.title || '').toLowerCase();
+                        const evalText = (item.evaluate || '').toLowerCase();
+                        if (!title.includes(q) && !evalText.includes(q)) return false;
+                    }
+                    if (selected.size > 0) {
+                        const styles = item.styles || [];
+                        let ok = false;
+                        for (const s of styles) {
+                            if (selected.has(s)) {
+                                ok = true;
+                                break;
+                            }
+                        }
+                        if (!ok) return false;
+                    }
+                    return true;
+                });
+            }
+
+            async function init() {
+                const dataUrl = new URL('data/bangumi_data.json', document.baseURI).href;
+                try {
+                    const response = await fetch(dataUrl);
+                    if (!response.ok) throw new Error('数据加载失败');
+                    const raw = await response.json();
+
+                    const allItems = Array.isArray(raw) ? raw : [];
+                    const normalized = allItems.map((item, idx) => ({
+                        __index: idx,
+                        title: item.title || '',
+                        cover: item.cover || '',
+                        evaluate: item.evaluate || '',
+                        latest_episode: item.latest_episode || '',
+                        release_date: item.release_date || '',
+                        styles: normalizeStyles(item.styles)
+                    }));
+
+                    const styleFreq = new Map();
+                    normalized.forEach((it) => {
+                        (it.styles || []).forEach((s) => {
+                            if (!s) return;
+                            styleFreq.set(s, (styleFreq.get(s) || 0) + 1);
+                        });
+                    });
+
+                    const allStylesSorted = Array.from(styleFreq.entries())
+                        .sort((a, b) => {
+                            if (b[1] !== a[1]) return b[1] - a[1];
+                            return a[0].localeCompare(b[0], 'zh-Hans-CN');
+                        })
+                        .map(([style]) => style);
+
+                    const visibleTagCount = 10;
+                    const visibleStyles = allStylesSorted.slice(0, visibleTagCount);
+                    const hiddenStyles = allStylesSorted.slice(visibleTagCount);
+
+                    function renderStyleChips() {
+                        styleFiltersEl.innerHTML = '';
+
+                        const stylesToRender = state.showAllStyleChips ? allStylesSorted : visibleStyles;
+
+                        stylesToRender.forEach((style) => {
+                            const active = state.selectedStyles.has(style);
+                            const btn = document.createElement('button');
+                            btn.type = 'button';
+                            btn.className = 'style-chip';
+                            btn.textContent = style;
+                            btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+                            btn.classList.toggle('is-active', active);
+
+                            btn.addEventListener('click', () => {
+                                if (state.selectedStyles.has(style)) state.selectedStyles.delete(style);
+                                else state.selectedStyles.add(style);
+
+                                state.filteredAll = applyFilters(normalized);
+                                state.page = 1;
+                                renderStyleChips();
+                                renderFromState();
+                            });
+
+                            styleFiltersEl.appendChild(btn);
+                        });
+
+                        if (hiddenStyles.length > 0) {
+                            const moreBtn = document.createElement('button');
+                            moreBtn.type = 'button';
+                            moreBtn.className = 'btn';
+                            if (state.showAllStyleChips) {
+                                moreBtn.textContent = `收起（隐藏 ${hiddenStyles.length} 个）`;
+                                moreBtn.addEventListener('click', () => {
+                                    state.showAllStyleChips = false;
+                                    renderStyleChips();
+                                });
+                            } else {
+                                moreBtn.textContent = `更多标签（${hiddenStyles.length}）`;
+                                moreBtn.addEventListener('click', () => {
+                                    state.showAllStyleChips = true;
+                                    renderStyleChips();
+                                });
+                            }
+                            styleFiltersEl.appendChild(moreBtn);
+                        }
+                    }
+
+                    function refreshListAndRender() {
+                        state.filteredAll = applyFilters(normalized);
+                        state.page = 1;
+                        renderFromState();
+                    }
+
+                    renderStyleChips();
+                    refreshListAndRender();
+
+                    clearBtn.addEventListener('click', () => {
+                        state.query = '';
+                        state.selectedStyles.clear();
+                        state.showAllStyleChips = false;
+                        searchInput.value = '';
+
+                        refreshListAndRender();
+                        renderStyleChips();
+                    });
+
+                    searchInput.addEventListener('input', () => {
+                        state.query = searchInput.value;
+                        refreshListAndRender();
+                    });
+                } catch (err) {
+                    console.error('加载失败:', err);
+                    container.innerHTML = '<div class="grid-status" style="grid-column: 1/-1; color: #e74c3c;">❌ 数据加载失败，请确保 bangumi_data.json 文件存在且格式正确</div>';
+                }
+            }
+
+            init();
+        })();
+    </script>
+</body>
+</html>
