@@ -7,7 +7,7 @@
     <meta name="description" content="Who is Jerry Leo?">
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -17,7 +17,33 @@
     </div>
 
     <nav class="site-nav" aria-label="Primary">
-        <span class="site-nav__brand">Jerry Leo</span>
+        <!-- 音乐播放器容器 -->
+        <div class="music-player">
+            <button class="music-btn prev" title="上一首">
+                <span class="icon">❙⯇</span>
+            </button>
+            <div class="disc-container">
+                <div class="disc" id="vinylDisc">
+                    <svg class="disc-text" viewBox="-50 -50 100 100">
+                        <defs>
+                            <path id="textArc" d="M -26,0 A 26,26 0 1,1 26,0 A 26,26 0 1,1 -26,0" />
+                        </defs>
+                        <text font-size="28" fill="#f7f7f7" font-family="system-ui, sans-serif" font-weight="bold" letter-spacing="1.5">
+                            <textPath href="#textArc" startOffset="16%">Jerry</textPath>
+                        </text>
+                        <text font-size="24" fill="#f7f7f7" font-family="system-ui, sans-serif" font-weight="bold" letter-spacing="1.5">
+                            <textPath href="#textArc" startOffset="75%">LEO</textPath>
+                        </text>
+                    </svg>
+                </div>
+                <div class="play-icon"></div>
+            </div>
+            <button class="music-btn next" title="下一首">
+                <span class="icon">⯈❙</span>
+            </button>
+        </div>
+        <!-- <span class="site-nav__brand">Jerry Leo</span> -->
+
         <ul class="site-nav__links">
             <li><a href="#resume">简历</a></li>
             <li><a href="#interests">兴趣</a></li>
@@ -77,7 +103,7 @@
             </svg>
             <div class="lang-label" id="langLabel" style="display:none">中文</div>
         </div>
-        <p class="hero__tagline">数据科学与推荐系统方向（机器学习 / 图学习 / 可视分析）</p>
+        <p class="hero__tagline">Vibe Coding / 可视分析 / 推荐系统 / 多智能体强化学习</p>
         <div class="hero__cta">
             <a class="btn btn--fill" href="#resume">查看简历</a>
             <a class="btn" href="#interests">兴趣</a>
@@ -119,41 +145,83 @@
 
             <div class="timeline">
                 <h3>经历（实习与项目 / 竞赛）</h3>
+
+                <!-- 实习经历 -->
+                <h4 class="timeline-section-title">实习经历</h4>
                 <article class="timeline-item">
                     <div class="timeline-item__role">人工智能工程师（客户响应中心）— 中国移动通信集团公司（东莞）</div>
                     <div class="timeline-item__meta">08/2023 - 09/2023</div>
                     <p class="timeline-item__desc">
-                        使用 PaddleOCR 完成“水印相机”拍照打卡的图片水印文字信息提取，识别打卡时间、水印格式与坐标等关键特征，并基于 Flask 部署接口测试。
-                        <br>使用 jieba 分词 + TF-IDF/词频向量与余弦相似度，结合 DBSCAN 聚类实现工单文本查重与相似工单归并，降低重复上报。
-                        <br>整合业务图片数据集，LabelImg 标定后训练 YOLOv8 进行安全装备（如安全系带/安全头盔）目标检测，并通过 Flask 接口进行推理验证与部署。
+                        <strong>图片水印文字信息提取：</strong><br>
+                        在管线施工过程中，公司需要派遣督导人员前往施工现场进行监工与盯防，并使用“水印相机”拍照打卡。本任务利用 PaddleOCR 模型处理图像和提取文本，分析水印特征，包括打卡时间、水印格式、坐标点、位置等，并使用正则表达式处理提取的字符串，采用 Flask 框架和 Postman 接口测试软件进行接口测试，并在公司内部服务器上部署该项目。
+                        <span style="display:block; height:0.4em;"></span>
+                        <strong>工单查重：</strong><br>
+                        各类管线布设与维修工程会产生相应的工单，部分工单标题较为相似，甚至同一工程重复上报，需要对工单进行文本相似度分析并查重。本任务采用 jieba 库进行中文分词，结合 sklearn 库进行词频向量的计算，并根据向量间的余弦相似度，采用 DBSCAN 算法进行聚类，并最终得到相似程度较高的工单。
+                        <span style="display:block; height:0.4em;"></span>
+                        <strong>图像目标检测：</strong><br>
+                        整合公司数据库中符合管线等高处作业要求的图片并整理成一个数据集，通过 LabelImg 软件对数据集图片中的目标（安全系带和安全头盔等安全保障装备）进行标定，制作面向 YOLO 的数据集，再采用 YOLOv8 模型进行模型的训练和推理验证，最后通过 Flask 框架与 Postman 接口测试软件来进行接口测试，将训练好的模型整合部署到公司内部服务器上。
                     </p>
                 </article>
+
+                <!-- 比赛经历 -->
                 <article class="timeline-item">
                     <div class="timeline-item__role">项目组长 — 第十八届全国大学生交通运输科技大赛</div>
                     <div class="timeline-item__meta">03/2023 - 05/2023</div>
                     <p class="timeline-item__desc">
-                        基于多智能体强化学习完成路网交通信号控制与可解释性探究，确定交叉口通行效率评估指标（吞吐量、信号灯、延误时间、交通流量）及时空相关性度量。
-                        <br>使用 Vue.js + D3 搭建可交互可视化平台，设计 6 个动态视图覆盖模型选择、对比、拥堵总览、测试评价、队列通行与关联分析。
-                        <br>通过 Notion 的共享工作区推进进度与分工，阶段性总结与复盘推动交付闭环。
-                        <br>该项目获得国家级二等奖（第十八届全国大学生交通运输科技大赛，05/2023）。
+                        <strong>项目名称：</strong>《基于多智能体强化学习的路网交通信号控制与可解释性探究》
+                        <span style="display:block; height:0.4em;"></span>
+                        <strong>指标确定：</strong><br>
+                        对学术文献进行了广泛回顾，以确定评估交叉口通行效率和相邻交叉口之间相关程度的关键指标，并选择吞吐量、交通信号灯、延误时间和交通流量作为评估交叉口通行效率的关键指标，采用时空相关性指标来评估相邻交叉口之间相关程度。
+                        <span style="display:block; height:0.4em;"></span>
+                        <strong>可视化平台搭建：</strong><br>
+                        使用 Vue.js 和 D3 开发交互式的、用户友好的可视分析系统。按照可解释性探索路线及逻辑，设计模型选择视图、模型对比视图、路网拥堵状态总览图、测试指标评价视图、交叉口排队通行视图、交叉口关联分析视图共计 6 个动态的、可交互的视图，以进行可解释性探究。
+                        <span style="display:block; height:0.4em;"></span>
+                        <strong>组织与统筹：</strong><br>
+                        为推进项目进度，在 Notion 平台的共享 Workplace 中与指导老师及小组成员分享项目进度，并通过阶段性总结报告的形式与小组成员共享当前项目存在的不足以及下一步的分工，逐步推进项目进度。
+                        <br>
+                        该项目获得<strong>国家级二等奖</strong>（第十八届全国大学生交通运输科技大赛，05/2023）。
+                        <span style="display:block; height:0.6em;"></span>
+                        <span style="font-size:0.9em;">
+                            <i class="fa-brands fa-weixin" style="color: #07C160;"></i>
+                            <a href="https://mp.weixin.qq.com/s/Va1b9zTSAGKq_3_7ndvlXA" target="_blank" rel="noopener noreferrer" style="color: rgb(209, 209, 209);">微信公众号报道</a>
+                            &nbsp;&nbsp;|&nbsp;&nbsp;
+                            <i class="fa-brands fa-github"></i>
+                            <a href="https://github.com/JerryLe0/XRL-TSC" target="_blank" rel="noopener noreferrer" style="color: rgb(209, 209, 209);">GitHub 项目</a>
+                        </span>
                     </p>
                 </article>
+
+                <!-- 项目经验 -->
+                <h4 class="timeline-section-title">项目经验</h4>
                 <article class="timeline-item">
                     <div class="timeline-item__role">项目组员 — 面向电商的高效推荐算法研究</div>
                     <div class="timeline-item__meta">01/2025 - 11/2025</div>
                     <p class="timeline-item__desc">
-                        独立复现并深入剖析 RecDiff（扩散社交去噪）、MHCN（多通道超图卷积）与 KCGN（知识感知耦合图神经网络）等 SOTA 社交推荐模型；
-                        在课程学习强化 RecDiff 上实现对社交图谱难度与扩散噪声强度的阶段性动态调度，使 Ciao 数据集 Recall@10 提升 51%，NDCG@10 提升 36%。
-                        <br>为 Yelp / Ciao / Epinions 设计稳健的端到端数据处理流水线，包含实体解析与标签降维映射，并统一时序划分标准，保证实验基准严谨性。
-                        <br>构建统一测试模块修复多目标 NDCG 偏差并严格执行全目标排序评估协议，消除数据泄露风险。
+                        <strong>项目名称：</strong>《面向电商的高效推荐算法研究》
+                        <span style="display:block; height:0.4em;"></span>
+                        <strong>机器学习与算法工程：</strong><br>
+                        独立复现并深度剖析了包括 RecDiff（基于扩散的社交去噪）、MHCN（多通道超图卷积网络）和 KCGN（知识感知耦合图神经网络）在内的多项 SOTA 社交推荐模型。联合开发了基于课程学习强化的 RecDiff，实现了对社交图谱难度和扩散噪声强度的阶段性动态调度，使模型在 Ciao 数据集上的 Recall@10 提升 7.09%，NDCG@10 提升 6.53%。
+                        <span style="display:block; height:0.4em;"></span>
+                        <strong>数据工程与管道架构：</strong><br>
+                        为 3 个大规模真实世界数据集（Yelp, Ciao, Epinions）设计了稳健的端到端数据处理流水线。针对 Yelp 数据集执行了严密的实体解析，成功匹配超 690 万条评论与商家信息；通过构建层级映射规则，将 1200+ 原始标签降维规范为 15 个主类别，并统一了 7:1:2 的时序划分标准。
+                        <span style="display:block; height:0.4em;"></span>
+                        <strong>基准测试与评估标准化：</strong><br>
+                        针对各类基线模型评估标准不一致的痛点，自主构建了统一的测试模块。使用标准的 IDCG 修复了多目标 NDCG 的计算偏差，并严格执行全目标排序评估协议，消除了数据泄露风险，确保了实验基准的严谨性。
+                        <span style="display:block; height:0.4em;"></span>
+                        <strong>全栈可视分析系统开发：</strong><br>
+                        采用前后端分离架构（Vue.js, Python, Flask），设计并部署了一个包括网络信息图、控制面板、噪声边信息图、噪声边数据统计图、用户-用户图，以及用户-物品-用户图在内的 6 个核心视图的可视分析系统。开发高交互 UI，首次直观展现了创新的“三类别噪声分类框架”，将黑盒化的隐空间扩散过程转化为可解释的网络拓扑与统计图表，显著加速了模型的调试、归因与验证周期。
                     </p>
                 </article>
+
                 <article class="timeline-item">
                     <div class="timeline-item__role">项目组员 — 基于 Spark 的个性化美食推荐</div>
                     <div class="timeline-item__meta">04/2022 - 06/2022</div>
                     <p class="timeline-item__desc">
-                        开发标签系统（评分、菜系、价格等），通过爬虫与开放数据源获取店铺信息，并补全缺失菜系以构建可用于协同过滤的训练数据集。
-                        <br>采用用户协同过滤生成个性化推荐，并使用 Streamlit 搭建交互式界面，支持用户偏好配置与推荐结果展示。
+                        <strong>数据获取与预处理：</strong><br>
+                        开发了一个标签系统，包括评级、菜系、价格等。通过爬虫软件以及网络开源渠道获取店家相关信息，结合人工数据处理补足菜系等部分缺失值，构建数据集，便于后续使用协同过滤以及加权求和方法对各个店家进行评分与排序。
+                        <span style="display:block; height:0.4em;"></span>
+                        <strong>数据可视化：</strong><br>
+                        采用基于用户的协同过滤技术创建个性化推荐，并使用 Streamlit 设计了一个可交互的、用户友好的界面，包括评级、菜系、价格等用户偏好的设置，以及基于用户偏好生成的前十位推荐商家的图文等信息展示。
                     </p>
                 </article>
             </div>
@@ -197,13 +265,59 @@
     </section>
 
     <div class="h-spacer">核心理念</div>
-    <section class="h-wrap" id="highlights" aria-label="Highlights">
-        <div class="h-pin">
-            <div class="h-track" id="hTrack">
-                <div class="h-card">坚持用数据说话<small>把想法落到可验证的实验与指标上</small></div>
-                <div class="h-card">让模型可解释、可落地<small>不仅追求效果，也关注可理解与可部署</small></div>
-                <div class="h-card">协作效率与交付质量<small>清晰沟通、快速迭代、按阶段复盘</small></div>
-                <div class="h-card">持续探索与学习<small>保持对新方法的敏感度与工程细节的严谨</small></div>
+    <div class="scrollbox" id="coreScrollbox">
+        <div class="scrollbox_container">
+            <!-- 卡片 1 -->
+            <div class="scrollbox_container_card">
+                <img class="parallax-bg bg-1" src="images/city.svg" alt="city background">
+                <img class="parallax-fg truck-1" src="images/truck.svg" alt="truck">
+                <p>坚持用数据说话</p>
+                <small>把想法落到可验证的实验与指标上</small>
+            </div>
+            <!-- 卡片 2 -->
+            <div class="scrollbox_container_card">
+                <img class="parallax-bg bg-2" src="images/city.svg" alt="city background">
+                <img class="parallax-fg truck-2" src="images/truck.svg" alt="truck">
+                <p>让模型可解释、可落地</p>
+                <small>不仅追求效果，也关注可理解与可部署</small>
+            </div>
+            <!-- 卡片 3 -->
+            <div class="scrollbox_container_card">
+                <img class="parallax-bg bg-3" src="images/city.svg" alt="city background">
+                <img class="parallax-fg truck-3" src="images/truck.svg" alt="truck">
+                <p>协作效率与交付质量</p>
+                <small>清晰沟通、快速迭代、按阶段复盘</small>
+            </div>
+            <!-- 卡片 4 -->
+            <div class="scrollbox_container_card">
+                <img class="parallax-bg bg-4" src="images/city.svg" alt="city background">
+                <img class="parallax-fg truck-4" src="images/truck.svg" alt="truck">
+                <p>持续探索与学习</p>
+                <small>保持对新方法的敏感度与工程细节的严谨</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="h-spacer">生活印记</div>
+    <section class="photo-wall-wrap" id="photoWall" aria-label="生活照片墙">
+        <div class="photo-wall-pin">
+            <div class="photo-wall-track" id="photoTrack">
+                <div class="photo-card">
+                    <img src="images/life1.jpg" alt="生活照1">
+                    <div class="photo-caption">YOASOBI ASIA TOUR 2024-2025 “超現実”</div>
+                </div>
+                <div class="photo-card">
+                    <img src="images/life2.jpg" alt="生活照2">
+                    <div class="photo-caption">Candlelight · Ghibli</div>
+                </div>
+                <div class="photo-card">
+                    <img src="images/project.jpg" alt="交通科技大赛合照">
+                    <div class="photo-caption">全国交通科技大赛 · 国家级二等奖</div>
+                </div>
+                <div class="photo-card">
+                    <img src="images/graduation.jpg" alt="毕业照">
+                    <div class="photo-caption">中山大学 · 学士</div>
+                </div>
             </div>
         </div>
     </section>
@@ -241,44 +355,44 @@
         <h2 class="section-title" id="interests-heading">我的关注</h2>
         <div class="interest-grid">
             <article class="interest-card" data-category="知识">
-                <h3>📚 知识</h3>
+                <h3 style="color: rgb(255, 250, 250);">📖 知识</h3>
                 <div class="preview-list" data-preview="知识">加载中…</div>
-                <a href="#" class="view-all-link" data-link="知识">查看更多 →</a>
+                <a href="#" class="view-all-link" data-link="知识" style="color: rgb(236, 233, 233);">查看更多 →</a>
             </article>
             <article class="interest-card" data-category="音乐">
-                <h3>🎵 音乐</h3>
+                <h3 style="color: rgb(255, 250, 250);">🎼 音乐</h3>
                 <div class="preview-list" data-preview="音乐">加载中…</div>
-                <a href="#" class="view-all-link" data-link="音乐">查看更多 →</a>
+                <a href="#" class="view-all-link" data-link="音乐" style="color: rgb(236, 233, 233);">查看更多 →</a>
             </article>
             <article class="interest-card" data-category="电影与电视">
-                <h3>🍿 影视</h3>
+                <h3 style="color: rgb(255, 250, 250);">🎬 影视</h3>
                 <div id="animePreview" class="preview-list" data-preview="电影与电视">加载中…</div>
-                <a href="bangumi.html" class="view-all-link">查看影视列表 →</a>
+                <a href="bangumi.html" class="view-all-link" style="color: rgb(236, 233, 233);">查看影视列表 →</a>
             </article>
             <article class="interest-card" data-category="科技">
-                <h3>💻 科技数码</h3>
+                <h3 style="color: rgb(255, 250, 250);">💻 科技数码</h3>
                 <div class="preview-list" data-preview="科技">加载中…</div>
-                <a href="#" class="view-all-link" data-link="科技">查看更多 →</a>
+                <a href="#" class="view-all-link" data-link="科技" style="color: rgb(236, 233, 233);">查看更多 →</a>
             </article>
             <article class="interest-card" data-category="体育">
-                <h3>⚽ 体育</h3>
+                <h3 style="color: rgb(255, 250, 250);">🏓 体育</h3>
                 <div class="preview-list" data-preview="体育">加载中…</div>
-                <a href="#" class="view-all-link" data-link="体育">查看更多 →</a>
+                <a href="#" class="view-all-link" data-link="体育" style="color: rgb(236, 233, 233);">查看更多 →</a>
             </article>
             <article class="interest-card" data-category="游戏">
-                <h3>🎮 游戏</h3>
+                <h3 style="color: rgb(255, 250, 250);">🎮 游戏</h3>
                 <div class="preview-list" data-preview="游戏">加载中…</div>
-                <a href="#" class="view-all-link" data-link="游戏">查看更多 →</a>
+                <a href="#" class="view-all-link" data-link="游戏" style="color: rgb(236, 233, 233);">查看更多 →</a>
             </article>
-            <article class="interest-card interest-card--wide" data-category="生活">
-                <h3>🌿 生活 · 旅行 · 美食</h3>
+            <article class="interest-card" data-category="生活">
+                <h3 style="color: rgb(255, 250, 250);">🚶‍♂️ 生活 · 旅行 · 美食</h3>
                 <div class="preview-list" data-preview="生活">加载中…</div>
-                <a href="#" class="view-all-link" data-link="生活">查看更多 →</a>
+                <a href="#" class="view-all-link" data-link="生活" style="color: rgb(236, 233, 233);">查看更多 →</a>
             </article>
             <article class="interest-card" data-category="动画">
-                <h3>🎬 动画</h3>
+                <h3 style="color: rgb(255, 250, 250);">📺 动画</h3>
                 <div class="preview-list" data-preview="动画">加载中…</div>
-                <a href="#" class="view-all-link" data-link="动画">查看更多 →</a>
+                <a href="#" class="view-all-link" data-link="动画" style="color: rgb(236, 233, 233);">查看更多 →</a>
             </article>
         </div>
     </section>
@@ -297,5 +411,6 @@
     <script src="js/chart.js"></script>
     <script src="js/data-loader.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/music-player.js"></script>
 </body>
 </html>

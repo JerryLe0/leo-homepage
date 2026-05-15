@@ -183,35 +183,35 @@ function updateInsightForDrill(filteredAll, parentCat, year, quarter) {
     // 已有的 drillMsg 逻辑保持不变（略长，此处不重复）
     let drillMsg = '';
     if (parentCat === '游戏') {
-        if (top[0] === '电子竞技') drillMsg = '⚡ 你热衷于电竞赛事，LPL、LCK、无畏契约的职业选手和比赛时刻牵动你的心。';
-        else if (top[0] === '游戏官方') drillMsg = '🎮 你是游戏产业的“媒体人”，关注米哈游、腾讯、鹰角等厂商的一举一动。';
-        else if (top[0] === '游戏攻略') drillMsg = '📚 喜欢钻研游戏机制，攻略和教程是你的得力助手。';
-        else drillMsg = `🎲 在游戏领域，你尤其关注「${top[0]}」相关内容。`;
+        if (top[0] === '电子竞技') drillMsg = '⚡ 我热衷于电竞赛事，LPL、LCK、无畏契约的职业选手和比赛时刻牵动我的心。';
+        else if (top[0] === '游戏官方') drillMsg = '🎮 我是游戏产业的“媒体人”，关注米哈游、腾讯、鹰角等厂商的一举一动。';
+        else if (top[0] === '游戏攻略') drillMsg = '📚 喜欢钻研游戏机制，攻略和教程是我的得力助手。';
+        else drillMsg = `🎲 在游戏领域，我尤其关注「${top[0]}」相关内容。`;
     } else if (parentCat === '知识') {
-        if (top[0] === '科技理工') drillMsg = '🤖 硬核科技爱好者，AI、深度学习、编程教程占据你的收藏夹。';
+        if (top[0] === '科技理工') drillMsg = '🤖 硬核科技爱好者，AI、深度学习、编程教程占据我的收藏夹。';
         else if (top[0] === '社会科学') drillMsg = '🌏 关心世界局势与历史脉络，常看时政评论和社科分析。';
-        else if (top[0] === '语言学习') drillMsg = '🗣️ 语言能力持续进化，英语、日语学习资源是你每日必备。';
-        else drillMsg = `📖 知识海洋中，你聚焦在「${top[0]}」领域。`;
+        else if (top[0] === '语言学习') drillMsg = '🗣️ 语言能力持续进化，英语、日语学习资源是我每日必备。';
+        else drillMsg = `📖 知识海洋中，我聚焦在「${top[0]}」领域。`;
     } else if (parentCat === '音乐') {
-        if (top[0] === '流行歌手') drillMsg = '🎤 流行音乐是你的精神食粮，华语、J-Pop、欧美流行全战线覆盖。';
-        else if (top[0] === '器乐演奏') drillMsg = '🎹 纯音乐爱好者，钢琴、吉他的旋律让你沉静或振奋。';
-        else if (top[0] === '游戏/动画音乐') drillMsg = '🎧 游戏原声和动画配乐是你的宝藏歌单。';
+        if (top[0] === '流行歌手') drillMsg = '🎤 流行音乐是我的精神食粮，华语、J-Pop、欧美流行全战线覆盖。';
+        else if (top[0] === '器乐演奏') drillMsg = '🎹 纯音乐爱好者，钢琴、吉他的旋律让我沉静或振奋。';
+        else if (top[0] === '游戏/动画音乐') drillMsg = '🎧 游戏原声和动画配乐是我的宝藏歌单。';
         else drillMsg = `🎵 音乐品味独特，偏爱「${top[0]}」这类风格。`;
     } else if (parentCat === '生活') {
-        if (top[0] === '搞笑/日常') drillMsg = '😂 生活需要笑声，搞笑UP主和日常吐槽是你放松的方式。';
-        else if (top[0] === '美食') drillMsg = '🍳 美食博主是你的“云饭搭子”，探店、烹饪教程收藏无数。';
-        else if (top[0] === '旅行') drillMsg = '✈️ 身体和灵魂总有一个在路上，旅行vlog带你走遍世界。';
-        else drillMsg = `🌿 生活中你关注「${top[0]}」，享受真实与趣味。`;
+        if (top[0] === '搞笑/日常') drillMsg = '😂 生活需要笑声，搞笑UP主和日常吐槽是我放松的方式。';
+        else if (top[0] === '美食') drillMsg = '🍳 美食博主是我的“云饭搭子”，探店、烹饪教程收藏无数。';
+        else if (top[0] === '旅行') drillMsg = '✈️ 身体和灵魂总有一个在路上，旅行vlog带我走遍世界。';
+        else drillMsg = `🌿 生活中我关注「${top[0]}」，享受真实与趣味。`;
     } else {
-        drillMsg = `✨ 在“${parentCat}”领域，你主要聚焦于「${top[0]}」相关内容。`;
+        drillMsg = `✨ 在“${parentCat}”领域，我主要聚焦于「${top[0]}」相关内容。`;
     }
 
     const insightHtml = `
         <div class="insight-card">
             <div class="card-header">
-                <span class="time-badge">📅 ${year}年 Q${quarter}</span>
-                <span class="total-badge">🔍 钻取至 ${parentCat}</span>
-                <span class="total-badge">共 ${total} 人</span>
+                <span class="time-badge">📅${year}年 Q${quarter}</span>
+                <span class="total-badge">关注${parentCat}区</span>
+                <span class="total-badge">共${total}人</span>
             </div>
             <div class="main-focus">
                 <span class="label" style="font-size: 0.85rem;">· 二级主导 ·</span>
@@ -251,7 +251,7 @@ function startOrbitGlowAnimation(chart) {
         const scale = (ratioX + ratioY) / 2;
         const absoluteCenterX = canvasRect.left + canvasRect.width / 2;
         const absoluteCenterY = canvasRect.top + canvasRect.height / 2;
-        const radius = logicalRadius * 0.975 * scale;
+        const radius = logicalRadius * 0.815 * scale;
         
         const elapsed = (now - orbitAnimationStart) / 1000;
         let angleRad = (angularSpeed * elapsed + initialOffset) % (2 * Math.PI);

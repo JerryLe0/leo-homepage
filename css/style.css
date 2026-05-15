@@ -778,7 +778,8 @@ canvas#interestChart {
 
 .drill-back-btn {
     display: inline-block;
-    background: var(--accent);
+    /* background: var(--accent); */
+    background: #e0d8d8;
     color: var(--bg);
     border: none;
     padding: 0.3rem 1rem;
@@ -791,4 +792,416 @@ canvas#interestChart {
 .drill-back-btn:hover {
     filter: brightness(1.1);
     transform: translateY(-1px);
+}
+
+/* ========= 照片墙 - 横向滚动 ========= */
+.photo-wall-wrap {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: var(--bg);    /* 确保背景统一 */
+}
+
+.photo-wall-pin {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    background: var(--bg);
+    overflow: hidden;
+}
+
+.photo-wall-track {
+    display: flex;
+    gap: 2.5rem;
+    padding: 0 5rem;
+    will-change: transform;
+}
+
+/* 卡片样式 - 默认较大尺寸 */
+.photo-card {
+    flex: 0 0 auto;
+    width: 520px;            /* 固定较大宽度，适应大屏 */
+    background: var(--paper);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.25);
+    transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+}
+
+.photo-card:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 30px 45px rgba(0, 0, 0, 0.3);
+}
+
+/* 图片比例 3:2，铺满卡片宽度 */
+.photo-card img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    display: block;
+}
+
+/* 图片说明文字 */
+.photo-caption {
+    padding: 1.2rem 1.5rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--bg);
+    background: var(--paper);
+    line-height: 1.4;
+}
+
+/* ========= 响应式调整 ========= */
+/* 中等屏幕（笔记本/平板横屏） */
+@media (max-width: 1400px) {
+    .photo-card {
+        width: 460px;
+    }
+    .photo-wall-track {
+        gap: 2rem;
+        padding: 0 4rem;
+    }
+}
+
+/* 小屏幕（平板竖屏 / 大手机） */
+@media (max-width: 1024px) {
+    .photo-wall-pin {
+        height: 80vh;         /* 适当降低高度，避免过度占屏 */
+    }
+    .photo-card {
+        width: 400px;
+    }
+    .photo-caption {
+        font-size: 0.95rem;
+        padding: 1rem;
+    }
+    .photo-wall-track {
+        gap: 1.8rem;
+        padding: 0 3rem;
+    }
+}
+
+/* 手机横屏或较小设备 */
+@media (max-width: 768px) {
+    .photo-wall-pin {
+        height: 70vh;
+    }
+    .photo-card {
+        width: 320px;
+    }
+    .photo-caption {
+        font-size: 0.85rem;
+        padding: 0.8rem;
+    }
+    .photo-wall-track {
+        gap: 1.5rem;
+        padding: 0 2rem;
+    }
+}
+
+/* 超小手机（< 480px） */
+@media (max-width: 480px) {
+    .photo-card {
+        width: 260px;
+    }
+    .photo-caption {
+        font-size: 0.75rem;
+        padding: 0.6rem;
+    }
+    .photo-wall-track {
+        gap: 1.2rem;
+        padding: 0 1.5rem;
+    }
+}
+
+/* ========= 核心理念 - 原生滚动视差 ========= */
+#coreScrollbox {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+#coreScrollbox .scrollbox_container {
+    display: flex;
+    justify-content: flex-start;  /* 保持横向从左开始 */
+    align-items: center;          /* 垂直居中 */
+    height: 100vh;
+    flex-shrink: 0;
+}
+
+#coreScrollbox .scrollbox_container_card {
+    position: relative;
+    width: 65rem;
+    height: 40rem;
+    background: rgba(247, 247, 247, 0.08);
+    backdrop-filter: blur(8px);
+    border-radius: 5rem;
+    margin-left: 5rem;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+    border: 1px solid rgba(247,247,247,0.1);
+}
+
+#coreScrollbox .scrollbox_container_card p {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--paper);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    z-index: 2;
+    position: relative;
+}
+
+#coreScrollbox .scrollbox_container_card small {
+    font-size: 1.2rem;
+    color: var(--muted);
+    max-width: 80%;
+    z-index: 2;
+    position: relative;
+}
+
+/* 背景层 (city) */
+#coreScrollbox .parallax-bg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 100%;      /* 高度填满卡片 */
+    width: auto;       /* 宽度自动，保持原始比例 */
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 1;
+}
+
+#coreScrollbox .bg-1 { left: 0; }
+#coreScrollbox .bg-2 { left: calc(-100% + -4rem); }
+#coreScrollbox .bg-3 { left: calc(-205% + -4rem); }
+#coreScrollbox .bg-4 { left: calc(-310% + -4rem); }
+
+/* 前景层 (truck) */
+#coreScrollbox .parallax-fg {
+    position: absolute;
+    bottom: 0;
+    height: 6rem;
+    width: auto;
+    pointer-events: none;
+    will-change: transform;
+    z-index: 10;
+}
+
+/* 每张卡车的初始偏移量（仿原示例，逐渐向左偏移） */
+#coreScrollbox .truck-1 { left: 0; }
+#coreScrollbox .truck-2 { left: calc(-100% + -4rem); }
+#coreScrollbox .truck-3 { left: calc(-205% + -4rem); }
+#coreScrollbox .truck-4 { left: calc(-310% + -4rem); }
+
+/* 响应式调整 */
+@media (max-width: 1024px) {
+    #coreScrollbox .scrollbox_container_card {
+        width: 55rem;
+        height: 32rem;
+        margin-left: 3rem;
+    }
+    #coreScrollbox .scrollbox_container_card p {
+        font-size: 2.2rem;
+    }
+    #coreScrollbox .scrollbox_container_card small {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    #coreScrollbox .scrollbox_container_card {
+        width: 40rem;
+        height: 24rem;
+        margin-left: 2rem;
+    }
+    #coreScrollbox .scrollbox_container_card p {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #coreScrollbox .scrollbox_container_card {
+        width: 30rem;
+        height: 18rem;
+        margin-left: 1.5rem;
+    }
+    #coreScrollbox .scrollbox_container_card p {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 768px) {
+    #coreScrollbox .card-1 .parallax-fg { left: 2%; }
+    #coreScrollbox .card-2 .parallax-fg { left: 30%; }
+    #coreScrollbox .card-3 .parallax-fg { left: 58%; }
+    #coreScrollbox .card-4 .parallax-fg { left: 86%; }
+}
+
+/* ========= 音乐播放器 ========= */
+.music-player {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(8px);
+    padding: 0.3rem 0.8rem;
+    border-radius: 50px;
+    margin-right: 1rem;
+}
+
+.music-btn {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: var(--paper);
+    transition: transform 0.2s, opacity 0.2s;
+    padding: 0 0.2rem;
+    font-family: monospace;  /* 使三角和竖线对齐 */
+}
+.music-btn:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+}
+
+.music-btn.prev .icon {
+    font-size: 0.6em;  /* 相对于按钮字体大小缩小 */
+}
+
+.music-btn.next .icon {
+    font-size: 0.6em;  
+}
+
+.disc-container {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+}
+
+.disc {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 30% 30%, #333, #111);
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px #fff5, 0 0 0 5px #888, 0 2px 8px rgba(0,0,0,0.4);
+    transition: box-shadow 0.2s;
+    animation: spin 8s linear infinite;
+    animation-play-state: paused;
+}
+/* 唱片中央小圆圈（默认可见） */
+.disc::after {
+    content: "";
+    position: absolute;
+    top: 45%;
+    left: 45%;
+    width: 10%;
+    height: 10%;
+    background: silver;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px #fff;
+    transition: opacity 0.2s ease;
+}
+/* 悬停时隐藏小圆圈 */
+.disc-container:hover .disc::after {
+    opacity: 0;
+}
+/* 播放时的旋转动画 */
+.disc.playing {
+    animation-play-state: running;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* 中央图标（播放/暂停）默认隐藏，悬停显示 */
+.play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 14px;
+    color: rgba(255,255,255,0.95);
+    text-shadow: 0 0 2px black;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.disc-container:hover .play-icon {
+    opacity: 1;
+}
+
+/* 响应式微调 */
+@media (max-width: 640px) {
+    .music-player {
+        gap: 0.5rem;
+        padding: 0.2rem 0.6rem;
+    }
+    .disc-container {
+        width: 24px;
+        height: 24px;
+    }
+    .music-btn {
+        font-size: 1.2rem;
+    }
+}
+
+.song-progress-tip {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(4px);
+    color: #f7f7f7;
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+    margin-top: 8px;
+    z-index: 200;
+    opacity: 0;
+    transition: opacity 0.2s;
+    font-family: monospace;
+}
+
+.disc-container:hover .song-progress-tip {
+    opacity: 1;
+}
+
+.disc-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: spin 16s linear infinite;
+    animation-play-state: paused;
+}
+
+.disc.playing .disc-text {
+    animation-play-state: running;
+}
+
+.disc-container:hover .disc::after {
+    opacity: 0;
 }

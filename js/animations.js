@@ -146,8 +146,93 @@ function initGSAPScroll() {
     }
 }
 
+function initPhotoWallScroll() {
+    const wrap = document.querySelector('.photo-wall-wrap');
+    const track = document.getElementById('photoTrack');
+    if (!wrap || !track || typeof gsap === 'undefined' || !window.ScrollTrigger) return;
+    
+    const getScroll = () => Math.max(0, track.scrollWidth - window.innerWidth);
+    gsap.to(track, {
+        x: () => -getScroll(),
+        ease: 'none',
+        scrollTrigger: {
+            trigger: wrap,
+            start: 'top top',
+            end: () => `+=${getScroll()}`,
+            pin: true,
+            scrub: 1,
+            invalidateOnRefresh: true
+        }
+    });
+}
+
 // 暴露全局初始化函数
 window.initAnimations = function() {
     new LiquidGlassName().init();
-    initGSAPScroll();
+    // initGSAPScroll();
+    initPhotoWallScroll();  // 新增照片墙滚动
 };
+
+// ========= 核心理念原生滚动视差 =========
+(function() {
+    const scrollbox = {
+        container: document.querySelector("#coreScrollbox .scrollbox_container"),
+        cards: [...document.querySelectorAll("#coreScrollbox .scrollbox_container_card")],
+        trigger_distance: 0,
+        border_distance: 0,
+        distance: 0,
+        resize() {
+            const wrapper = document.querySelector("#coreScrollbox");
+            if (!wrapper || !this.container) return;
+            // 强制获取准确宽度
+            const width = this.container.scrollWidth || this.container.offsetWidth;
+            wrapper.style.height = `${width}px`;
+            this.trigger_distance = wrapper.offsetTop;
+            this.border_distance = this.trigger_distance + wrapper.offsetHeight - window.innerHeight;
+        },
+        move() {
+            const scrollY = window.scrollY;
+            if (scrollY >= this.trigger_distance && scrollY <= this.border_distance) {
+                this.distance = scrollY - this.trigger_distance;
+                this.container.style.transform = `translateY(${this.distance}px)`;
+                
+                const maxScroll = this.border_distance - this.trigger_distance;
+                const progress = this.distance / maxScroll;
+                const translateX = progress * (this.container.offsetWidth - window.innerWidth);
+                
+                for (let i = 0; i < this.cards.length; i++) {
+                    const card = this.cards[i];
+                    // 卡片本身水平移动
+                    card.style.transform = `translateX(${-translateX}px)`;
+                    
+                    // 背景层：慢速反向移动（速度系数 -0.3）
+                    const bg = card.querySelector('.parallax-bg');
+                    if (bg) {
+                        bg.style.transform = `translateX(${translateX * -0.3}px)`;
+                    }
+                    // 前景层：快速同向移动（速度系数 1.2）
+                    const fg = card.querySelector('.parallax-fg');
+                    if (fg) {
+                        fg.style.transform = `translateX(${translateX * 1.2}px)`;
+                    }
+                }
+            }
+        }
+    };
+
+    function initCoreScroll() {
+        if (!document.querySelector("#coreScrollbox")) return;
+        scrollbox.resize();
+        // 页面所有资源加载完成后再次调整（防止图片影响宽度）
+        window.addEventListener('load', () => scrollbox.resize());
+        window.addEventListener("resize", () => scrollbox.resize());
+        window.addEventListener("scroll", () => scrollbox.move());
+    }
+
+    // 等待页面加载完成
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCoreScroll);
+    } else {
+        initCoreScroll();
+    }
+})();
